@@ -1,0 +1,124 @@
+<%- include ('../partials/header'); -%>
+<%- include ('../partials/subHead1'); -%>
+<!--this whole thing will come under AJAX call because and everything will be planned-->
+<form id="voting-form" action="<%=id%>" class="form-inline">
+
+    <div id="outer" class="container">
+
+
+    </div>
+</form>
+<div id="post" class="container">
+    <h4 id="post-head">Captain</h4>
+</div>
+<script type="text/javascript">
+    console.log("hi1");
+    $(function () {
+        $('select').on('click', function () {
+            //console.log(document);
+            // var form = document.voting-form;
+            //var dataString = $(form).serialize();
+            // console.log(JSON.stringify(dataString));
+            console.log($(this).children("option:selected").val());
+            var y = $(this).children("option:selected").val();
+            var x = $(this).attr('id') + "?post=" + y;
+
+            $.ajax({
+
+                url: x,
+                contentType: 'application/json',
+                success: function (response) {
+                    $('#post-head').html("your new header");
+                    var div1 = $('#outer');
+                    console.log(div1.children());
+                    response.house.forEach(function (houses) {
+                        //console.log(houses);
+                        //var iterator = houses;
+                        $(div1).append("<div id='" + houses + "' class='container'></div>");
+                        // $('#house').append("<div id='house-head' class='container'></div>");
+                        $('#' + houses).append("<h4 id='house-name" + houses + "'></h4>");
+                        $('#' + "house-name" + houses).html(houses);
+
+                        //console.log($('#' + houses))
+
+                        $('#' + houses).append("<div id='male" + houses + "' class='row text-center flex-wrap'></div>");
+                        $('#' + "male" + houses).append("<div id='inner" + houses + "' class='container'></div>");
+                        //$('#' + "inner" + houses).append("<div id='column" + houses + "' class='col-md-3 col-sm-6'></div>");
+
+                        response.candy.forEach(function (candidate) {
+                            if (candidate.house == houses) {
+                                //console.log(candidate.name);
+                                $('#' + "inner" + houses).append("<div id='column" + candidate._id + "' class='col-md-3 col-sm-6'></div>");
+
+                                $('#' + "column" + candidate._id).append("<div id='image-boundary" + candidate._id + "' class='thumbnail'></div>");
+
+                                //$('#column').append("<div id='image-boundary' class='thumbnail'></div>");
+                                //$('#'+"image-boundary"+houses).attr("id", candidate.house);
+                                $('#' + "image-boundary" + candidate._id).append(
+                                    "<img id='image' src='../" + candidate.image + "' width='200' height='100'>"
+
+                                    + "<h4>" + candidate.name + "</h4>" +
+
+                                    "<input id='choice[]' type='radio' name='" + candidate.house + "' value='" + candidate._id + "'>");
+
+
+                            }
+                        })
+                    })
+                    $('#outer').append(
+                        "<input type='submit' value='vote'>");
+                    //console.log($('#house').children());
+                }
+
+            });
+        });
+
+
+        $('#voting-form').submit(function (shikhar) {
+            // var form = document.voting;
+            var dataString = $(this).serialize();
+            var z = $(this).attr('action');
+            console.log(dataString);
+            var x="hello";
+            //console.log("hi");
+            $.ajax({
+                url: '/matdan/' + z,
+                data:dataString,
+                type: 'PUT',
+                //contentType: 'application/json',
+                //JSON.stringify({ newName: dataString }),
+                // data: ),
+                //crossDomain: true,
+                //processData: false,
+                success: function (data) {
+                    console.log(response);
+                    //$('select').click();
+                    // $('#get-button').click();
+                }
+            });
+        });
+    });
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%- include ('../partials/footer'); -%>

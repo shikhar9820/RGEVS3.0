@@ -1,0 +1,46 @@
+
+<%- include ('../partials/header'); -%>
+
+<h1 class="text-primary text-center">Name of the poll</h1>
+<div class="container">
+  <div class="row">
+      <div style="width: 30%; margin: 50px auto;">
+         <form action="/candidate/<%=pollId%>" method="POST" enctype="multipart/form-data">
+          <% var po=pollId;%>
+          <% console.log(po)%> 
+           <div class="form-group">
+              <input class="form-control" type="text" name= "name"   placeholder="Name">
+           </div>
+           <div class="form-group">
+            <select class="form-control" name="post" id="exampleFormControlSelect1">
+              <option>Posts</option>
+              <% posts.forEach(function(posting){ %>
+                <option><%= posting %></option>
+                 <% }); %>
+ 
+            </select>
+          </div>
+          <div class="form-group">
+            <select class="form-control" name="house" id="exampleFormControlSelect1">
+              <option>House</option>
+              <% houses.forEach(function(housing){ %>
+                <option><%= housing %></option>
+                 <% }); %>
+ 
+            </select>
+          </div>
+           <div class="form-group">
+            <input type="file" name="productImage" class="form-control-file" id="exampleFormControlFile1"></input>
+          </div>
+          <div class="form-group">
+            <button class="btn btn-lg btn-primary btn-block" role="button" aria-pressed="true" type="submit" >Add a candidate</button>   
+                  </div>
+                  <div style="width: 30%; margin: 50px auto;">
+                    <a href="/candidate/<%=pollId%>" class="btn btn-lg btn-primary btn-block" role="button" aria-pressed="true">Next</a> 
+                  </div>
+          </form>
+      </div>    
+  </div>
+
+<%- include ('../partials/footer'); -%>
+

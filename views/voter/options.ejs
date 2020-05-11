@@ -1,0 +1,15 @@
+<%- include ('../partials/header'); -%>
+<div class="container">
+    <% posts.forEach(function(post){ %>
+    <div class="row">
+        <div style="width: 30%; margin: 50px auto;">
+           <form>
+            <li><a href="/vote/<%=id%>" name="<%=post%>"><%=post%></a></li>   
+            </form>
+        </div>    
+    </div>
+    <%})%>
+</div>
+<%- include ('../partials/footer'); -%>
+
+

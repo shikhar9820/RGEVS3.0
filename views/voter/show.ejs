@@ -1,0 +1,38 @@
+- include ('../partials/header'); -
+
+<form action="/matdan/id?_method=PUT" method="POST">
+
+    response.posts.forEach(function(post){
+    if(post==y){
+    <div class="container">
+        <h4>post</h4>
+    </div>
+    <div class="row text-center flex-wrap">
+        response.candidates.forEach(function(candidate){
+        if(post==candidate.post){
+        <div class="container">
+            <div class="col-md-3 col-sm-6">
+                <div class="thumbnail">
+                    <img src="../ candidate.image " width="200" height="100">
+                    <input type="radio" name="candidate.house+counter" value="candidate._id">
+                    <div class="caption">
+                        <h4> candidate.name </h4>
+                    </div>
+                    <div class="caption">
+                        <h4> candidate.post+candidate.house </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+        });
+    </div>
+    };
+    });
+    <div>
+        <button class="btn btn-lg btn-primary btn-block" role="button" aria-pressed="true" type="submit">Make a
+            vote</button>
+    </div>
+</form>
+
+- include ('../partials/footer'); -

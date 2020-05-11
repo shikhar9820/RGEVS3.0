@@ -1,0 +1,66 @@
+<%- include ('../partials/header'); -%>
+<%- include ('../partials/subHead'); -%>
+<%  var counter=0;%>
+<script src="cd.js"></script>
+  <div style="width: 60%; margin: 50px auto;">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Polls</th>
+        <th scope="col">Status</th>
+        
+      </tr>
+    </thead>
+   <div id="reload"></div>
+    <tbody>
+
+     
+      <% polls.forEach(function(polling){ %>
+        <%if(polling.authorId==currentUser._id){%>
+        <% counter=counter+1;%>
+        <tr>
+          <th scope="row"><%=counter%></th>
+          <td><%= polling.poll %></td>
+          <%  var Difference = Math.abs(currDate.getTime()-polling.startDate.getTime());%>
+          <%  var Hours      = Math.ceil(Difference / (1000 * 3600 ));%>
+
+          <%if(Hours<=24 && polling.flag){%>
+              <%var countDownDate = polling.startDate.getTime();%>
+              <%var now = new Date().getTime();%>
+              <%var timeleft = Math.abs(now - countDownDate-86400000);%>  
+              <%console.log(timeleft)%>     
+              <%var days = Math.floor(timeleft / (1000 * 60 * 60 * 24));%> 
+              <%var hours = Math.floor((timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));%> 
+              <%var minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));%> 
+              <%var seconds = Math.floor((timeleft % (1000 * 60)) / 1000);%> 
+              <%console.log(days);%> 
+              <%console.log(hours);%> 
+              <%console.log(minutes);%> 
+              <%console.log(seconds);%> 
+              <%var final= days +"d" +hours+"h"+ minutes +"m" +seconds + "s"%>
+              <td><%= final%></td>
+            <%}%>
+          <%if(Hours>24 && polling.flag){%>
+            <td>result</td>
+            <%}%>
+          <%if(!polling.flag){%>
+            <td>
+                <div class="form-group">
+                <a href="/post/<%=polling._id%>"  role="button" aria-pressed="true">Add candidate</a> 
+                <a href="/activate/<%=polling._id%>/edit"  role="button" aria-pressed="true">Start Voting</a> 
+               </div>
+            </td>
+            <%}%>
+        </tr>
+        <%}%>
+        <%});%>
+        
+    
+    </tbody>
+  </div>
+  </table>
+  </div>
+</div>
+
+<%- include ('../partials/footer'); -%>
