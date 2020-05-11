@@ -1,0 +1,202 @@
+<%- include ('../partials/header'); -%>
+<%- include ('../partials/subHead1'); -%>
+<!--this whole thing will come under AJAX call because and everything will be planned-->
+
+<div id="main" class="container">
+    <form id="form1" action="/matdan/id?_method=PUT" method="POST">
+        <div id="post" class="container">
+            <h4 id="post-head">Captain</h4>
+        </div>
+        <div id="house" class="container">
+            <div id="house-head" class="container">
+                <h4 id="house-name"></h4>
+            </div>
+            <div id="male" class="row text-center flex-wrap">
+                <div class="container">
+                    <div class="col-md-3 col-sm-6">
+                        <div id="image-boundary" class="thumbnail">
+                            <img id="image" src="" width="200" height="100">
+                            <div id="candidate" class="caption">
+                                <h4 id="candidate-name">Shikhar Kataruka</h4>
+                            </div>
+                            <input id="choice" type="radio" name="" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="female" class="row text-center flex-wrap">
+                <div class="container">
+                    <div class="col-md-3 col-sm-6">
+                        <div id="image-boundary" class="thumbnail">
+                            <img id="image" src="" width="200" height="100">
+                            <div id="candidate" class="caption">
+                                <h4 id="candidate-name">Shikhar Kataruka</h4>
+                            </div>
+                            <input id="choice" type="radio" name="" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="div1">
+            <button id="buttons" class="btn btn-lg btn-primary btn-block" role="button" aria-pressed="true"
+                type="submit">Make a vote</button>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    console.log("hi1");
+    //var id = rowEl.find('.id').text();
+
+    // GET/READ
+    $('select').on('click', function () {
+        //console.log(document);
+        console.log($(this).children("option:selected").val());
+        var y = $(this).children("option:selected").val();
+        var x = $(this).attr('id') + "?post=" + y;
+
+        $.ajax({
+
+            url: x,
+            contentType: 'application/json',
+            success: function (response) {
+                $('#post-head').html("your new header");
+                console.log(response);
+                response.house.forEach(function (houses) {
+                    $('#main').append(" <div id="house" class="container"></div>");
+                    response.candy.forEach(function (candidate) {
+                        if (candidate.house == houses) {
+                            console.log("hi");
+                            $('#image').attr("src", "../" + candidate.image);
+                            $('#candidate-name').html(candidate.name);
+                            $('#post-head').html("your new header");
+                            $('#choice').attr("name", candidate.house);
+                            $('#choice').attr("value", candidate._id);
+                            /*
+                            $('#input').attr("src", "");
+                            $('#name').attr("src", "");
+                            $('#house').attr("src", "");*/
+                            var form = $('#form1');
+                            var div1 = $('#test');
+                            console.log(div1);
+                            //console.log(form.children());
+                        }
+                    })
+                })
+            }
+        });
+    });
+                   /* var div2 = $('#house');
+var div3 = $('#house-head');
+var div4 = $('#house-name');
+var div5 = $('#male');
+var div6 = $('#inner');
+var div7 = $('#column');
+var div8 = $('#image-boundary');
+var div9 = $('#image');
+var div10 = $('#candidate');
+var div11 = $('#candidate-name');
+var div12 = $('#choice');*/
+
+    /*console.log("hi");
+               $('#image').attr("src", "../" + candidate.image);
+               $('#candidate-name').html(candidate.name);
+               $('#post-head').html("your new header");
+               $('#choice').attr("name", candidate.house);
+               $('#choice').attr("value", candidate._id);
+               /*
+               $('#input').attr("src", "");
+               $('#name').attr("src", "");
+               $('#house').attr("src", "");
+               var form = $('#form1');
+               var div1p = $('#outer');
+               console.log(div1p);*/
+                                //console.log(form.children());*/
+</script>
+<%- include ('../partials/footer'); -%>
+
+<!--<div id="house" class="container">
+        <div id="house-head" class="container">
+            <h4 id="house-name"></h4>
+        </div>
+        <div id="male" class="row text-center flex-wrap">
+            <div id="inner" class="container">
+                <div id="column" class="col-md-3 col-sm-6">
+                    <div id="image-boundary" class="thumbnail">
+                        <img id="image" src="" width="200" height="100">
+                        <div id="candidate" class="caption">
+                            <h4 id="candidate-name">Shikhar Kataruka</h4>
+                        </div>
+                        <input id="choice" type="radio" name="" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="female" class="row text-center flex-wrap">
+            <div class="container">
+                <div class="col-md-3 col-sm-6">
+                    <div id="image-boundary" class="thumbnail">
+                        <img id="image" src="" width="200" height="100">
+                        <div id="candidate" class="caption">
+                            <h4 id="candidate-name">Shikhar Kataruka</h4>
+                        </div>
+                        <input id="choice" type="radio" name="" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<form id="voting" action="/matdan/id?_method=PUT" method="POST">
+
+    <div id="outer" class="container">
+        <div id="post" class="container">
+            <h4 id="post-head">Captain</h4>
+        </div>
+        <div id="main" class="container">
+    <form id="form1" action="/matdan/id?_method=PUT" method="POST">
+        <div id="post" class="container">
+            <h4 id="post-head">Captain</h4>
+        </div>
+        <div id="house" class="container">
+            <div id="house-head" class="container">
+                <h4 id="house-name"></h4>
+            </div>
+            <div id="male" class="row text-center flex-wrap">
+                <div class="container">
+                    <div class="col-md-3 col-sm-6">
+                        <div id="image-boundary" class="thumbnail">
+                            <img id="image" src="" width="200" height="100">
+                            <div id="candidate" class="caption">
+                                <h4 id="candidate-name">Shikhar Kataruka</h4>
+                            </div>
+                            <input id="choice" type="radio" name="" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="female" class="row text-center flex-wrap">
+                <div class="container">
+                    <div class="col-md-3 col-sm-6">
+                        <div id="image-boundary" class="thumbnail">
+                            <img id="image" src="" width="200" height="100">
+                            <div id="candidate" class="caption">
+                                <h4 id="candidate-name">Shikhar Kataruka</h4>
+                            </div>
+                            <input id="choice" type="radio" name="" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="div1">
+            <button id="buttons" class="btn btn-lg btn-primary btn-block" role="button" aria-pressed="true"
+                type="submit">Make a vote</button>
+        </div>
+    </form>
+</div>
+
+       
+    </div>
+</form>
+-->

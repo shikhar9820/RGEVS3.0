@@ -1,0 +1,43 @@
+<%- include ('../partials/header'); -%>
+
+<%  var counter=0;%>
+<script src="cd.js"></script>
+<div style="width: 60%; margin: 50px auto;">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Polls</th>
+        <th scope="col">Status</th>
+
+      </tr>
+    </thead>
+    <div id="reload"></div>
+    <tbody>
+
+
+      <% poll.forEach(function(polling){ %>
+
+      <tr>
+
+        <%if(polling.flag==true && polling.code==currentUser.code){%>
+        <% counter=counter+1;%>
+        <th scope="row"><%=counter%></th>
+        <td><%= polling.poll %></td>
+        <td>
+          <div class="form-group">
+            <a href="/hello/<%=polling._id%>" role="button" aria-pressed="true">Make Vote</a>
+          </div>
+        </td>
+        <%}%>
+        </tr>
+        <%});%>
+
+
+    </tbody>
+</div>
+</table>
+</div>
+</div>
+
+<%- include ('../partials/footer'); -%>
