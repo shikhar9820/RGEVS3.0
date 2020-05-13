@@ -1,97 +1,89 @@
-var express   = require("express");
-var router    = express.Router();
-var passport = require("passport");
-var posts     =require("../models/post");
-var candidate =require("../models/candidate");
-var polls      =require("../models/poll");
-var multer    =require("multer");
+var express = require("express");
+var router = express.Router();
+//var passport = require("passport");
+//var posts = require("../models/post");
+var candidate = require("../models/candidate");
+var polls = require("../models/poll");
+var multer = require("multer");
 
 //===============//
 //Multer Config//
 //==============//
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './uploads/')
+        cb(null, './uploads/')
     },
     filename: function (req, file, cb) {
-      cb(null, file.originalname);
+        cb(null, file.originalname);
     }
-  })
+})
 var upload = multer({ storage: storage })
 
 //============//
 //Landing Route -This route Will direct to the option page given to the user for making or creating a vote
 //===========//
 
-router.get("/",function(req,res){
-    //var currentUser=req.user;
-   //console.log(currentUser.username);
-    res.render("index/landing");
-    //res.render("index/test");
 
-});
+
 
 //============//
 //Activate Route
 //===========//
-router.get("/activate/:id/edit",schoolLoggedIn,function(req,res){
-    polls.findById(req.params.id,function(err,flag){
-        if(err)
-        {   console.log(err);
-            //res.render("poll");
+router.get("/activate/:id/edit", schoolLoggedIn, function (req, res) {
+    polls.findById(req.params.id, function (err, flag) {
+        if (err) {
+            console.log(err);
         }
-        else{
-             res.render("index/edit",{polls:flag});
+        else {
+            res.render("index/edit", { polls: flag });
         }
     });
 });
-router.put("/activate/:id",schoolLoggedIn,function(req,res){
-    var count=req.body.count;
-    var voterlist=[];
-    var x=req.user.code;
-    for(var i=0;i<count;i++){
-      var y=x+i;
-      voterlist[i]=y;
+router.put("/activate/:id", schoolLoggedIn, function (req, res) {
+    var count = req.body.count;
+    var voterlist = [];
+    var x = req.user.code;
+    for (var i = 0; i < count; i++) {
+        var y = x + i;
+        voterlist[i] = y;
     }
     console.log(voterlist);
-    polls.findByIdAndUpdate(req.params.id,{voter:voterlist,flag:true,startDate:new Date()},function(err,update){
-        if(err){
+    polls.findByIdAndUpdate(req.params.id, { voter: voterlist, flag: true, startDate: new Date() }, function (err, update) {
+        if (err) {
             console.log(err);
         }
-        else{
+        else {
             res.redirect("/poll");
         }
     });
-    
-}) ;
+
+});
 //============//
 //poll Page Route- This is the first page a user i.e school sees once it is logged in.
 //===========//
-router.get("/poll",schoolLoggedIn,function(req,res){
+router.get("/poll", schoolLoggedIn, function (req, res) {
 
-    polls.find({},function(err,polls){
-        if(err){
+    polls.find({}, function (err, polls) {
+        if (err) {
             console.log("ERROR");
         } else {
-           
-            res.render("index/poll",{polls:polls,currDate:new Date()});
+
+            res.render("index/poll", { polls: polls, currDate: new Date() });
         }
     });
-   
+
 });
 
-router.post("/poll", schoolLoggedIn,function(req,res){
+router.post("/poll", schoolLoggedIn, function (req, res) {
     console.log(req.poll);
-    var newPoll={poll:req.body.poll, authorId:req.user._id , startDate: new Date(), code:req.user.code};
-    polls.create(newPoll,function (err,poll)
-    
-      {
-         if(err){
-                 console.log(err);
-                } 
-         else{
-             res.redirect("/poll");
-         }
+    var newPoll = { poll: req.body.poll, authorId: req.user._id, startDate: new Date(), code: req.user.code };
+    polls.create(newPoll, function (err, poll) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.redirect("/poll");
+        }
     });
 });
 
@@ -103,36 +95,34 @@ router.post("/poll", schoolLoggedIn,function(req,res){
 //===========//
 
 //router.get("/post/new",schoolLoggedIn,function(req,res){
-  //  res.render("posts/newpost",{currentUser:req.user});
+//  res.render("posts/newpost",{currentUser:req.user});
 //});
-router.get("/post/:id",schoolLoggedIn,function(req,res){
-    var pollIds=req.params.id;
-    
-    polls.findById(req.params.id,function(err,posts){
-        if(err)
-        {   console.log(err);
-            //res.render("poll");
+router.get("/post/:id", schoolLoggedIn, function (req, res) {
+    var pollIds = req.params.id;
+
+    polls.findById(req.params.id, function (err, posts) {
+        if (err) {
+            console.log(err);
         }
-        else{
-             res.render("posts/posting",{posts:posts.post,pollId:pollIds});
+        else {
+            res.render("posts/posting", { posts: posts.post, pollId: pollIds });
         }
     });
 
 });
 
-router.put("/post/:id",schoolLoggedIn,function(req,res){
-    var x=req.params.id;
-    polls.findByIdAndUpdate(req.params.id, { "$push": { "post": req.body.posting } },function(err,update){
-        if(err){
+router.put("/post/:id", schoolLoggedIn, function (req, res) {
+    var x = req.params.id;
+    polls.findByIdAndUpdate(req.params.id, { "$push": { "post": req.body.posting } }, function (err, update) {
+        if (err) {
             console.log(err);
         }
-        else{
-            //update.post.push(req.body.posting);
-            res.redirect("/post/"+x);
+        else {
+            res.redirect("/post/" + x);
         }
     });
-    
-}) ;
+
+});
 
 
 //============//
@@ -142,34 +132,32 @@ router.put("/post/:id",schoolLoggedIn,function(req,res){
 //                      3.handling post request for new post
 //===========//
 
-router.get("/house/:id",schoolLoggedIn,function(req,res){
-    var pollIds=req.params.id;
-    
-    polls.findById(req.params.id,function(err,houses){
-        if(err)
-        {   console.log(err);
-            //res.render("poll");
+router.get("/house/:id", schoolLoggedIn, function (req, res) {
+    var pollIds = req.params.id;
+
+    polls.findById(req.params.id, function (err, houses) {
+        if (err) {
+            console.log(err);
         }
-        else{
-             res.render("houses/house",{houses:houses.house,pollId:pollIds});
+        else {
+            res.render("houses/house", { houses: houses.house, pollId: pollIds });
         }
     });
 
 });
 
-router.put("/house/:id",schoolLoggedIn,function(req,res){
-    var x=req.params.id;
-    polls.findByIdAndUpdate(req.params.id, { "$push": { "house": req.body.house } },function(err,update){
-        if(err){
+router.put("/house/:id", schoolLoggedIn, function (req, res) {
+    var x = req.params.id;
+    polls.findByIdAndUpdate(req.params.id, { "$push": { "house": req.body.house } }, function (err, update) {
+        if (err) {
             console.log(err);
         }
-        else{
-            //update.post.push(req.body.posting);
-            res.redirect("/house/"+x);
+        else {
+            res.redirect("/house/" + x);
         }
     });
-    
-}) ;
+
+});
 
 
 //============//
@@ -177,126 +165,69 @@ router.put("/house/:id",schoolLoggedIn,function(req,res){
 //===========//
 
 
-router.get("/candidate/new/:id",schoolLoggedIn,function(req,res){
-    var x=req.params.id;
+router.get("/candidate/new/:id", schoolLoggedIn, function (req, res) {
+    var x = req.params.id;
 
-    polls.findById(req.params.id,function(err,poll){
-        if(err)
-        {   console.log(err);
-            //res.render("poll");
+    polls.findById(req.params.id, function (err, poll) {
+        if (err) {
+            console.log(err);
         }
-        else{
-             res.render("candidate/newcandidate",{houses:poll.house,posts:poll.post,pollId:x});
+        else {
+            res.render("candidate/newcandidate", { houses: poll.house, posts: poll.post, pollId: x });
         }
     });
-    
+
 });
-router.post("/candidate/:id",upload.single('productImage'), function(req,res){
+router.post("/candidate/:id", upload.single('productImage'), function (req, res) {
     console.log("//");
     console.log(req.body);
     console.log("hi");
-    var name =req.body.name;
-    var post =req.body.post;
-    var house =req.body.house;
-    var image=req.file.path;
-    var po=req.params.id;
+    var name = req.body.name;
+    var post = req.body.post;
+    var house = req.body.house;
+    var image = req.file.path;
+    var po = req.params.id;
     console.log(po);
     console.log(image);
-    var newcandidate={id:po,name:name,post:post,house:house,image:image};
+    var newcandidate = { id: po, name: name, post: post, house: house, image: image };
     console.log("hi5");
 
-    candidate.create(newcandidate,function (err,candidate)
-    
-      {
-         if(err){
-                 console.log(err);
-                } 
-         else{
+    candidate.create(newcandidate, function (err, candidate) {
+        if (err) {
+            console.log(err);
+        }
+        else {
             console.log("hi1");
 
-             res.redirect("/candidate/new/"+po);
-         }
+            res.redirect("/candidate/new/" + po);
+        }
     });
 });
 
-router.get("/candidate/:id",schoolLoggedIn,function(req,res){
-    console.log("hi"+req.params.id);
-    candidate.find({id:req.params.id},function(err,candidates){
-        if(err)
-        {   console.log(err);
+router.get("/candidate/:id", schoolLoggedIn, function (req, res) {
+    console.log("hi" + req.params.id);
+    candidate.find({ id: req.params.id }, function (err, candidates) {
+        if (err) {
+            console.log(err);
             //res.render("poll");
         }
-        else{
+        else {
             console.log(candidates);
-             res.render("candidate/candidate",{candidate:candidates});
+            res.render("candidate/candidate", { candidate: candidates });
         }
     });
-    
+
 });
-router.post("/test",function(req,res){
+router.post("/test", function (req, res) {
     console.log(req.body.post);
-
-    /*polls.findById(req.params.id,function(err,poll){
-        if(err)
-        {   console.log(err);
-            //res.render("poll");
-        }
-        else{
-             res.render("candidate/newcandidate",{houses:poll.house,posts:poll.post,pollId:x});
-        }
-    });*/
-    
 });
-/*
-router.post("/candidate",upload.single('productImage'), function(req,res){
-    var name =req.body.name;
-    var post =req.body.post;
-    var house =req.body.house;
-    var image=req.file.path;
-    console.log(image);
-    var newcandidate={name:name,post:post,house:house,image:image};
-    candidate.create(newcandidate,function (err,candidate)
-    
-      {
-         if(err){
-                 console.log(err);
-                } 
-         else{
-             res.redirect("/candidate/new";
-         }
-    });
-});*/
-
-
-
-
 //=======middleware
 
-function schoolLoggedIn(req,res,next){
-    if(req.isAuthenticated() && req.user.role=="school" && req.user.code!=""){
+function schoolLoggedIn(req, res, next) {
+    if (req.isAuthenticated() && req.user.role == "school" && req.user.code != "") {
         return next();
     }
     res.redirect("/login");
 };
 //=============================================//////////////////////////==============================//
-module.exports=router;
-
-/*
-
- polls.findByIdAndUpdate(req.params.id,function(err,update){
-        if(err){
-            console.log(err);
-        }
-        else{
-            update.post.push(req.body.posting);
-            update.save(function(err,yes){
-                if(err){
-                    console.log(err);
-                }
-                else{
-            res.redirect("/post/"+x);
-        }
-                });
-        }
-    });
-*/ 
+module.exports = router;
