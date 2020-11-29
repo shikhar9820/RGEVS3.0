@@ -1,124 +1,117 @@
 <%- include ('../partials/header'); -%>
 <%- include ('../partials/subHead1'); -%>
+
 <!--this whole thing will come under AJAX call because and everything will be planned-->
 <form id="voting-form" action="<%=id%>" class="form-inline">
 
     <div id="outer" class="container">
-
-
     </div>
 </form>
-<div id="post" class="container">
-    <h4 id="post-head">Captain</h4>
-</div>
+
 <script type="text/javascript">
+
     console.log("hi1");
-    $(function () {
+    console.log(sessionStorage.getItem("<%=id%><%= username %>"));
+    //console.log(response.username);
+    $(document).ready(function (data) {
+        var t = "<%=id%><%= username %>";
+        console.log($("#post-head").text());
+        console.log(<%= username %>);
+        if (sessionStorage.getItem("<%=id%><%= username %>") === null) {
+            var posts = new Array();
+            sessionStorage.setItem(t, posts);
+
+        }
         $('select').on('click', function () {
-            //console.log(document);
-            // var form = document.voting-form;
-            //var dataString = $(form).serialize();
-            // console.log(JSON.stringify(dataString));
+            document.getElementById($(this).attr('id')).disabled = true;
             console.log($(this).children("option:selected").val());
             var y = $(this).children("option:selected").val();
             var x = $(this).attr('id') + "?post=" + y;
+            var z = "<%=id%><%= username %>";
+            var finding = sessionStorage.getItem(z);
+            console.log(JSON.stringify(finding));
+            if (finding.includes(y, 0)) {
+                console.log("visited");
+            }
+            else {
+                console.log(finding);
+                console.log(sessionStorage);
 
-            $.ajax({
+                //sessionStorage.removeItem('key');
+                $.ajax({
 
-                url: x,
-                contentType: 'application/json',
-                success: function (response) {
-                    $('#post-head').html("your new header");
-                    var div1 = $('#outer');
-                    console.log(div1.children());
-                    response.house.forEach(function (houses) {
-                        //console.log(houses);
-                        //var iterator = houses;
-                        $(div1).append("<div id='" + houses + "' class='container'></div>");
-                        // $('#house').append("<div id='house-head' class='container'></div>");
-                        $('#' + houses).append("<h4 id='house-name" + houses + "'></h4>");
-                        $('#' + "house-name" + houses).html(houses);
+                    url: x,
+                    cache: true,
+                    contentType: 'application/json',
+                    success: function (response) {
+                        var div1 = $('#outer');
+                        $(div1).append("<h4 id='post-head'>" + response.post + "</h4>");
 
-                        //console.log($('#' + houses))
+                        console.log(div1.children());
+                        response.house.forEach(function (houses) {
+                            $(div1).append("<div id='" + houses + "' class='container'></div>");
+                            $('#' + houses).append("<h4 id='house-name" + houses + "'></h4>");
+                            $('#' + "house-name" + houses).html(houses);
+                            $('#' + houses).append("<div id='male" + houses + "' class='row text-center flex-wrap'></div>");
+                            $('#' + "male" + houses).append("<div id='inner" + houses + "' class='container'></div>");
+                            response.candy.forEach(function (candidate) {
+                                if (candidate.house == houses) {
+                                    $('#' + "inner" + houses).append("<div id='column" + candidate._id + "' class='col-md-3 col-sm-6'></div>");
 
-                        $('#' + houses).append("<div id='male" + houses + "' class='row text-center flex-wrap'></div>");
-                        $('#' + "male" + houses).append("<div id='inner" + houses + "' class='container'></div>");
-                        //$('#' + "inner" + houses).append("<div id='column" + houses + "' class='col-md-3 col-sm-6'></div>");
+                                    $('#' + "column" + candidate._id).append("<div id='image-boundary" + candidate._id + "' class='thumbnail'></div>");
 
-                        response.candy.forEach(function (candidate) {
-                            if (candidate.house == houses) {
-                                //console.log(candidate.name);
-                                $('#' + "inner" + houses).append("<div id='column" + candidate._id + "' class='col-md-3 col-sm-6'></div>");
+                                    $('#' + "image-boundary" + candidate._id).append(
+                                        "<img id='image' src='../" + candidate.image + "' width='200' height='100'>"
 
-                                $('#' + "column" + candidate._id).append("<div id='image-boundary" + candidate._id + "' class='thumbnail'></div>");
+                                        + "<h4>" + candidate.name + "</h4>" +
 
-                                //$('#column').append("<div id='image-boundary' class='thumbnail'></div>");
-                                //$('#'+"image-boundary"+houses).attr("id", candidate.house);
-                                $('#' + "image-boundary" + candidate._id).append(
-                                    "<img id='image' src='../" + candidate.image + "' width='200' height='100'>"
-
-                                    + "<h4>" + candidate.name + "</h4>" +
-
-                                    "<input id='choice[]' type='radio' name='" + candidate.house + "' value='" + candidate._id + "'>");
+                                        "<input id='choice[]' type='radio' name='" + candidate.house + "' value='" + candidate._id + "' required>");
 
 
-                            }
+                                }
+                            })
                         })
-                    })
-                    $('#outer').append(
-                        "<input type='submit' value='vote'>");
-                    //console.log($('#house').children());
-                }
+                        $('#outer').append(
+                            "<input type='submit' value='vote'>");
 
-            });
+
+                    }
+
+                });
+            }
         });
+        $("#voting-form").submit(function (shikhar) {
 
+            event.preventDefault();
+            var poster = $("#post-head").text();
 
-        $('#voting-form').submit(function (shikhar) {
-            // var form = document.voting;
             var dataString = $(this).serialize();
             var z = $(this).attr('action');
             console.log(dataString);
-            var x="hello";
-            //console.log("hi");
             $.ajax({
                 url: '/matdan/' + z,
-                data:dataString,
-                type: 'PUT',
-                //contentType: 'application/json',
-                //JSON.stringify({ newName: dataString }),
-                // data: ),
-                //crossDomain: true,
-                //processData: false,
-                success: function (data) {
-                    console.log(response);
-                    //$('select').click();
-                    // $('#get-button').click();
-                }
+                data: dataString,
+                method: 'put',
+                success: function (result, status, xhr) {
+                    //console.log(document.getElementById("post-head"))
+
+                    sessionStorage[t] = sessionStorage[t] + " " + poster;
+
+                    if (sessionStorage[t].length != <%= len %>)
+            window.location.href = result.redirectTo;
+
+                    else {
+                window.location.href = result.redirectToo;
+            }
+        },
+            error: function (xhr, status, error) {
+                console.log('error')
+            }
+
             });
         });
     });
 
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <%- include ('../partials/footer'); -%>
