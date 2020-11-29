@@ -3,10 +3,11 @@ var router = express.Router();
 var candidate = require("../models/candidate");
 var polls = require("../models/poll");
 var multer = require("multer");
+var paginate = require("express-paginate");
 
-//===============//
-//Multer Config//
-//==============//
+
+
+//Multer Config= Multer stores the file uploaded by the user in the form of document and image files..
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './uploads/')
@@ -17,10 +18,7 @@ var storage = multer.diskStorage({
 })
 var upload = multer({ storage: storage })
 
-//=================//
-//VOTER LANDING//
-//=============//
-
+//VOTER LANDING== This route will display the elections associated with each voter 
 router.get("/elect", voterLoggedIn, function (req, res) {
   polls.find({}, function (err, poll) {
     if (err) {
@@ -31,25 +29,21 @@ router.get("/elect", voterLoggedIn, function (req, res) {
   });
 });
 
-
-
-//=============================================//
-//=============Election List===========================//
-//===========================================//
-
-
+//Election List== This will display the list of candidates standing in that election w.r.t posts
 router.get("/hello/:id", voterLoggedIn, function (req, res) {
   polls.findById(req.params.id, function (err, polling) {
     if (err) {
       console.log("ERROR123");
     } else {
+      var count=JSON.stringify(polling.post).length- (2*polling.post.length)-2+1;
       polling.voter.forEach(function (voterId) {
         if (voterId == req.user.username) {
-          candidate.find({ id: req.params.id, post: req.body.post }, function (err, candidate) {
+          //Link is selected item from sub heading list
+          candidate.find({ id: req.params.id }, function (err, candidate) {
             if (err) {
               console.log("ERROR");
             } else {
-              res.render("voter/demo", { posts: polling.post, candidates: candidate, id: req.params.id });
+              res.render("voter/demo", { username:voterId,house: polling.house, posts: polling.post, candidates: candidate, id: req.params.id ,len:count,poses:JSON.stringify(polling.post)});
             }
           });
         }
@@ -63,6 +57,7 @@ router.get("/hello/:id", voterLoggedIn, function (req, res) {
 router.get("/show/:id", voterLoggedIn, function (req, res) {
   console.log(req.query);
   console.log(req.query.post);
+
   polls.findById(req.params.id, function (err, polling) {
     if (err) {
       console.log("ERROR123");
@@ -75,7 +70,7 @@ router.get("/show/:id", voterLoggedIn, function (req, res) {
               console.log("ERROR566");
             }
             else {
-              res.send({ house: polling.house, candy: candidates, id: req.params.id });
+              res.send({ house: polling.house, candy: candidates, id: req.params.id ,post: req.query.post});
             }
           });
         }
@@ -87,7 +82,7 @@ router.get("/show/:id", voterLoggedIn, function (req, res) {
 });
 
 router.put("/matdan/:id", voterLoggedIn, function (req, res) {
-
+  var x=" ";
   polls.findById(req.params.id, function (err, polling) {
     if (err) {
       console.log("ERROR");
@@ -98,23 +93,26 @@ router.put("/matdan/:id", voterLoggedIn, function (req, res) {
 
         var id1 = req.body[housing];
         console.log(id1);
-        candidate.findByIdAndUpdate({ _id: id1 }, { $inc: { votes: 1 } }, function (err, candidate) {
+        candidate.findOneAndUpdate({ _id: id1 }, { $inc: { votes: 1 } }, function (err, candidature) {
           if (err) {
             console.log("ERROR");
           }
           else {
-            console.log("lo");
+            console.log(candidature);
           }
         });
+        console.log(x);
+        //res.redirect("/hello/"+req.params.id);
 
       });
+      res.send({ redirectTo: '/hello/' + req.params.id ,redirectToo :'/elect'});
     }
 
   });
-  res.send('Succesfully updated product!');
+
 });
 
-//=======middleware
+//==middleware==//
 
 function voterLoggedIn(req, res, next) {
   if (req.isAuthenticated() && req.user.role == "voter") {
@@ -125,4 +123,11 @@ function voterLoggedIn(req, res, next) {
 
 //================================================================================================//
 module.exports = router;
-
+/*
+success: function(result, status, xhr) {
+  console.log('success')
+  window.location.href = result.redirectTo
+},
+error: function(xhr, status, error) {
+  console.log('error')
+}*/

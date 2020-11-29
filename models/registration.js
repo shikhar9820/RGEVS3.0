@@ -11,7 +11,7 @@ var regSchema = new mongoose.Schema({
     password: String,//hashed password 
     code    : String,//first four digit of poll code
     role    : String,//voter or school
-    pollId:  [String],//Incase of school ,array of pollID organized by the school 
+    pollId  : [String],//Incase of school ,array of pollID organized by the school 
 
 
 

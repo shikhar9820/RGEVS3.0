@@ -7,8 +7,6 @@ var mongoose = require("mongoose");
 var passport = require("passport");
 var bodyParser = require("body-parser");
 var user = require("./models/registration");
-//var posts                 =require("./models/post");
-//var voter                 =require("./models/voter");
 var candidate = require("./models/candidate");
 var polls = require("./models/poll");
 var localStrategy = require("passport-local");
@@ -18,17 +16,16 @@ var multer = require("multer");
 var pollRoutes = require("./routes/poll");
 var indexRoutes = require("./routes/index");
 var voterRoutes = require("./routes/voter");
-//var $                     = require("jQuery");
-
 const nodemailer = require("nodemailer");
-
+mongoose.set('useFindAndModify', false);
 
 //=======================//
 //Mongoose configurations//
 //=======================//
-mongoose.set("useNewUrlParser", true);
-mongoose.set("useUnifiedTopology", true);
-mongoose.connect("mongodb://localhost:27017/vote", { useNewUrlParser: true });
+ mongoose.set("useNewUrlParser", true);
+ mongoose.set("useUnifiedTopology", true);
+mongoose.set('useCreateIndex', true);
+ mongoose.connect("mongodb://localhost:27017/vote",{useNewUrlParser: true , useFindAndModify: false});
 
 //=====================//
 //Express configurations
@@ -73,7 +70,7 @@ app.use(voterRoutes);
 
 //=========================================================================================================
 
-const port = 3000;
+const port = 9000;
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 //https://www.airpair.com/node.js/posts/top-10-mistakes-node-developers-make

@@ -1,7 +1,6 @@
 var express = require("express");
 var router = express.Router();
-//var passport = require("passport");
-//var posts = require("../models/post");
+
 var candidate = require("../models/candidate");
 var polls = require("../models/poll");
 var multer = require("multer");

@@ -5,9 +5,10 @@ var user = require("../models/registration");
 const nodemailer = require("nodemailer");
 var transporter = nodemailer.createTransport({
     service: 'gmail',
-    auth: {
-        user: 'shikhar.kataruka@gmail.com',
-        pass: 'shikhar@fusol'
+    auth:
+    {
+        user: 'shikhar.kataruka87@gmail.com',
+        pass: 'shikhar97'
     }
 });
 
@@ -54,7 +55,7 @@ router.post("/schoolSignup", function (req, res) {
         from: 'shikhar.kataruka@gmail.com',
         to: 'shikhar.kataruka89@gmail.com',
         subject: 'hi',
-        text: x
+        text: "HI"
     };
     transporter.sendMail(mailOption, function (err, info) {
 
@@ -72,7 +73,6 @@ router.post("/schoolSignup", function (req, res) {
 });
 
 //Login Routes
-
 router.get("/login", function (req, res) {
     res.render("index/login");
 });
