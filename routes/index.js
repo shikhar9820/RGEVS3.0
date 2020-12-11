@@ -52,19 +52,19 @@ router.post("/schoolSignup", function (req, res) {
     var users = req.body.username;
     var x=JSON.stringify(req.body);
     var mailOption = {
-        from: 'shikhar.kataruka@gmail.com',
+        from: 'shikhar.kataruka87@gmail.com',
         to: 'shikhar.kataruka89@gmail.com',
         subject: 'hi',
         text: "HI"
     };
-    transporter.sendMail(mailOption, function (err, info) {
+    transporter.sendMail(mailOption,function (err, info) {
 
         if (err) {
             console.log(err);
         }
         else {
             console.log("Email Sent");
-            res.redirect("/poll");
+            res.render("thankyou.ejs");
         }
     })
 
