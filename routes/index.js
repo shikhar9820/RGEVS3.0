@@ -2,8 +2,8 @@ var express      =  require("express");
 var router       =  express.Router();
 var passport     =  require("passport");
 var user         =  require("../models/registration");
-const nodemailer = require("nodemailer");
-var transporter  = nodemailer.createTransport({
+const nodemailer =  require("nodemailer");
+var transporter  =  nodemailer.createTransport({
     service: 'gmail',
     auth:
     {
@@ -95,14 +95,12 @@ router.get("/logout", function (req, res) {
 });
 
 //=======middleware
-
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
     res.redirect("/login");
 };
-
 //=======================================================//
 module.exports = router;
 

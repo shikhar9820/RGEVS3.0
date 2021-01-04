@@ -38,7 +38,7 @@ router.get("/activate/:id/edit", schoolLoggedIn, function (req, res) {
     });
 });
 router.put("/activate/:id", schoolLoggedIn, function (req, res) {
-    let count = req.body.count;
+    let count = req.body.count;//No of Votes
     let voterList = [];
     var x = req.user.code;
     for (var i = 0; i < count; i++) {
@@ -72,8 +72,9 @@ router.get("/poll", schoolLoggedIn, function (req, res) {
 });
 
 router.post("/poll", schoolLoggedIn, function (req, res) {
-    console.log(req.poll);
-    var newPoll = { poll: req.body.poll, authorId: req.user._id, startDate: new Date(), code: req.user.code };
+    //console.log(req.poll);
+    let pollCode= req.body.poll+req.user.code;
+    let newPoll = { poll: req.body.poll, authorId: req.user._id, startDate: new Date(), code: pollCode };
     polls.create(newPoll, function (err, poll) {
         if (err) {
             console.log(err);
