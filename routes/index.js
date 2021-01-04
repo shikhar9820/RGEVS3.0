@@ -1,9 +1,9 @@
-var express = require("express");
-var router = express.Router();
-var passport = require("passport");
-var user = require("../models/registration");
+var express      =  require("express");
+var router       =  express.Router();
+var passport     =  require("passport");
+var user         =  require("../models/registration");
 const nodemailer = require("nodemailer");
-var transporter = nodemailer.createTransport({
+var transporter  = nodemailer.createTransport({
     service: 'gmail',
     auth:
     {

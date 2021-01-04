@@ -1,9 +1,8 @@
-var express = require("express");
-var router = express.Router();
-
+var express   = require("express");
+var router    = express.Router();
 var candidate = require("../models/candidate");
-var polls = require("../models/poll");
-var multer = require("multer");
+var polls     = require("../models/poll");
+var multer    = require("multer");
 
 //===============//
 //Multer Config//
@@ -39,15 +38,14 @@ router.get("/activate/:id/edit", schoolLoggedIn, function (req, res) {
     });
 });
 router.put("/activate/:id", schoolLoggedIn, function (req, res) {
-    var count = req.body.count;
-    var voterlist = [];
+    let count = req.body.count;
+    let voterList = [];
     var x = req.user.code;
     for (var i = 0; i < count; i++) {
         var y = x + i;
-        voterlist[i] = y;
+        voterList[i] = y;
     }
-    console.log(voterlist);
-    polls.findByIdAndUpdate(req.params.id, { voter: voterlist, flag: true, startDate: new Date() }, function (err, update) {
+    polls.findByIdAndUpdate(req.params.id, { voter: voterList, flag: true, startDate: new Date() }, function (err, update) {
         if (err) {
             console.log(err);
         }
@@ -125,9 +123,9 @@ router.put("/post/:id", schoolLoggedIn, function (req, res) {
 
 
 //============//
-//House are three routes 
-//                      1.option to add new posts 
-//                      2.displaying all the added post 
+//House are three routes
+//                      1.option to add new posts
+//                      2.displaying all the added post
 //                      3.handling post request for new post
 //===========//
 
@@ -178,18 +176,15 @@ router.get("/candidate/new/:id", schoolLoggedIn, function (req, res) {
 
 });
 router.post("/candidate/:id", upload.single('productImage'), function (req, res) {
-    console.log("//");
     console.log(req.body);
-    console.log("hi");
-    var name = req.body.name;
-    var post = req.body.post;
+    var name  = req.body.name;
+    var post  = req.body.post;
     var house = req.body.house;
     var image = req.file.path;
-    var po = req.params.id;
+    var po    = req.params.id;
     console.log(po);
     console.log(image);
     var newcandidate = { id: po, name: name, post: post, house: house, image: image };
-    console.log("hi5");
 
     candidate.create(newcandidate, function (err, candidate) {
         if (err) {
@@ -204,14 +199,10 @@ router.post("/candidate/:id", upload.single('productImage'), function (req, res)
 });
 
 router.get("/candidate/:id", schoolLoggedIn, function (req, res) {
-    console.log("hi" + req.params.id);
     candidate.find({ id: req.params.id }, function (err, candidates) {
         if (err) {
-            console.log(err);
-            //res.render("poll");
-        }
+            console.log(err);}
         else {
-            console.log(candidates);
             res.render("candidate/candidate", { candidate: candidates });
         }
     });
