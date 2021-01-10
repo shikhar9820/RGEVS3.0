@@ -1,12 +1,10 @@
 var express = require("express");
 var router = express.Router();
 var candidate = require("../models/candidate");
+var voter = require("../models/voters");
 var polls = require("../models/poll");
 var multer = require("multer");
 var paginate = require("express-paginate");
-
-
-
 //Multer Config= Multer stores the file uploaded by the user in the form of document and image files..
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -16,7 +14,7 @@ var storage = multer.diskStorage({
     cb(null, file.originalname);
   }
 })
-var upload = multer({ storage: storage })
+var upload = multer({ storage: storage });
 
 //VOTER LANDING== This route will display the elections associated with each voter 
 router.get("/elect", voterLoggedIn, function (req, res) {
@@ -35,7 +33,7 @@ router.get("/hello/:id", voterLoggedIn, function (req, res) {
     if (err) {
       console.log("ERROR123");
     } else {
-      var count=JSON.stringify(polling.post).length- (2*polling.post.length)-2+1;
+      var count = JSON.stringify(polling.post).length - (2 * polling.post.length) - 2 + 1;
       polling.voter.forEach(function (voterId) {
         if (voterId == req.user.username) {
           //Link is selected item from sub heading list
@@ -43,7 +41,7 @@ router.get("/hello/:id", voterLoggedIn, function (req, res) {
             if (err) {
               console.log("ERROR");
             } else {
-              res.render("voter/demo", { username:voterId,house: polling.house, posts: polling.post, candidates: candidate, id: req.params.id ,len:count,poses:JSON.stringify(polling.post)});
+              res.render("voter/demo", { username: voterId, house: polling.house, posts: polling.post, candidates: candidate, id: req.params.id, len: count, poses: JSON.stringify(polling.post) });
             }
           });
         }
@@ -70,7 +68,7 @@ router.get("/show/:id", voterLoggedIn, function (req, res) {
               console.log("ERROR566");
             }
             else {
-              res.send({ house: polling.house, candy: candidates, id: req.params.id ,post: req.query.post});
+              res.send({ house: polling.house, candy: candidates, id: req.params.id, post: req.query.post });
             }
           });
         }
@@ -82,7 +80,7 @@ router.get("/show/:id", voterLoggedIn, function (req, res) {
 });
 
 router.put("/matdan/:id", voterLoggedIn, function (req, res) {
-  var x=" ";
+  var x = " ";
   polls.findById(req.params.id, function (err, polling) {
     if (err) {
       console.log("ERROR");
@@ -105,7 +103,7 @@ router.put("/matdan/:id", voterLoggedIn, function (req, res) {
         //res.redirect("/hello/"+req.params.id);
 
       });
-      res.send({ redirectTo: '/hello/' + req.params.id ,redirectToo :'/elect'});
+      res.send({ redirectTo: '/hello/' + req.params.id, redirectToo: '/elect' });
     }
 
   });
@@ -115,10 +113,25 @@ router.put("/matdan/:id", voterLoggedIn, function (req, res) {
 //==middleware==//
 
 function voterLoggedIn(req, res, next) {
-  if (req.isAuthenticated() && req.user.role == "voter") {
-    return next();
-  }
-  res.redirect("/login");
+  var voter = req.body.VoterId;
+  var voterCode = voter.slice(0, 7);
+  votersList.find({ code: voterCode }, function (err, cb) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      if (cb.voterList.includes(voter)) {
+        return next();
+      }
+      else {
+        //create another page for not authVoter
+        res.redirect("/voterSignUp");
+      }
+    }
+
+  });
+
+
 };
 
 //================================================================================================//
@@ -128,6 +141,6 @@ success: function(result, status, xhr) {
   console.log('success')
   window.location.href = result.redirectTo
 },
-error: function(xhr, status, error) {
+error  : function(xhr, status, error) {
   console.log('error')
 }*/

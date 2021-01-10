@@ -21,8 +21,7 @@
         <%  var Difference = Math.abs(currDate.getTime()-polling.startDate.getTime());%>
         <%  var Hours      = Math.ceil(Difference / (1000 * 3600 ));%>
       <tr>
-        
-        <%if(polling.flag==true && Hours< 24 && polling.code==currentUser.code ){%>
+        <%if(polling.flag ==true && Hours< 24 && polling.code==currentUser.code){%>
         <% counter=counter+1;%>
         <th scope="row"><%=counter%></th>
         <td><%= polling.poll %></td>

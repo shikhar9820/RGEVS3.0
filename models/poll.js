@@ -4,7 +4,7 @@ var passportLocalMongoose = require("passport-local-mongoose");
 
 var pollSchema = new mongoose.Schema({
     authorId: String,//Id of the creator i.e School
-    code:     String,//Code of the school
+    code:     String,//Code of the poll
     poll:     String,//Name of the poll
     flag:     {type: Boolean, default: false },//Activation Flag for poll to start
     post:     [String],//No of posts associated with the poll

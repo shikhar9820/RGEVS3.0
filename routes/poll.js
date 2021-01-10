@@ -3,7 +3,7 @@ var router    = express.Router();
 var candidate = require("../models/candidate");
 var polls     = require("../models/poll");
 var multer    = require("multer");
-
+var votersList    = require("../models/voters");
 //===============//
 //Multer Config//
 //==============//
@@ -45,12 +45,20 @@ router.put("/activate/:id", schoolLoggedIn, function (req, res) {
         var y = x + i;
         voterList[i] = y;
     }
-    polls.findByIdAndUpdate(req.params.id, { voter: voterList, flag: true, startDate: new Date() }, function (err, update) {
+    var newVoterList = { code: x, voter=voterList};
+    polls.findByIdAndUpdate(req.params.id, {flag: true, startDate: new Date() }, function (err, update) {
         if (err) {
             console.log(err);
         }
         else {
-            res.redirect("/poll");
+            votersList.create(newVoterList,function(err,confirmation){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    res.redirect("/poll");
+                }
+            })
         }
     });
 
@@ -73,7 +81,7 @@ router.get("/poll", schoolLoggedIn, function (req, res) {
 
 router.post("/poll", schoolLoggedIn, function (req, res) {
     //console.log(req.poll);
-    let pollCode= req.body.poll+req.user.code;
+    let pollCode= req.body.poll.slice(0, 3);+req.user.code;
     let newPoll = { poll: req.body.poll, authorId: req.user._id, startDate: new Date(), code: pollCode };
     polls.create(newPoll, function (err, poll) {
         if (err) {

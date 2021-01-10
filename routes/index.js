@@ -1,9 +1,10 @@
-var express      =  require("express");
-var router       =  express.Router();
-var passport     =  require("passport");
-var user         =  require("../models/registration");
-const nodemailer =  require("nodemailer");
-var transporter  =  nodemailer.createTransport({
+var express = require("express");
+var router = express.Router();
+var passport = require("passport");
+var user = require("../models/registration");
+var votersList = require("../models/voters");
+const nodemailer = require("nodemailer");
+var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth:
     {
@@ -31,33 +32,42 @@ router.get("/signup", function (req, res) {
     res.render("index/signup");
 });
 router.post("/voterSignup", function (req, res) {
-    var users = req.body.username;
-    var code = users.slice(0, 4);
-    var newUserVoter = new user({ username: users, code: code, role: "voter" });
-    user.register(newUserVoter, req.body.password, function (err, user) {
+    var voter = req.body.VoterId;
+    var voterCode = voter.slice(0, 7);
+    votersList.find({ code: voterCode }, function (err, cb) {
         if (err) {
             console.log(err);
-            return res.render("index/signup");
         }
-        passport.authenticate("local")(req, res, function () {
-
-            res.redirect("/elect");
-        });
+        else {
+            if (cb.voterList.includes(voter)){
+                  res.redirect('/elect?voterId='+ voter);//change
+            }
+            else {
+                //create another page for not authVoter
+                  res.redirect("/voterSignUp");
+            }
+        }
     });
-
-
 });
 
+//adminLoginLogic
+/*
+
+
+
+
+
+*/
 router.post("/schoolSignup", function (req, res) {
     var users = req.body.username;
-    var x=JSON.stringify(req.body);
+    var x = JSON.stringify(req.body);
     var mailOption = {
         from: 'shikhar.kataruka87@gmail.com',
         to: 'shikhar.kataruka89@gmail.com',
         subject: 'hi',
         text: "HI"
     };
-    transporter.sendMail(mailOption,function (err, info) {
+    transporter.sendMail(mailOption, function (err, info) {
 
         if (err) {
             console.log(err);
@@ -79,7 +89,7 @@ router.get("/login", function (req, res) {
 
 router.post("/login", passport.authenticate(
     "local",
-    { 
+    {
         successRedirect: "/poll",
         failureRedirect: "/login"
     }),
