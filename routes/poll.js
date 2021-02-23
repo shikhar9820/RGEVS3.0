@@ -37,7 +37,7 @@ router.get("/activate/:id/edit", schoolLoggedIn, function (req, res) {
         }
     });
 });
-router.put("/activate/:id", schoolLoggedIn, function (req, res) {
+/*router.put("/activate/:id", schoolLoggedIn, function (req, res) {
     let count = req.body.count;//No of Votes
     let voterList = [];
     var x = req.user.code;
@@ -45,7 +45,7 @@ router.put("/activate/:id", schoolLoggedIn, function (req, res) {
         var y = x + i;
         voterList[i] = y;
     }
-    var newVoterList = { code: x, voter=voterList};
+    var newVoterList = { id:req.params.id,code: x, voter=voterList};
     polls.findByIdAndUpdate(req.params.id, {flag: true, startDate: new Date() }, function (err, update) {
         if (err) {
             console.log(err);
@@ -62,7 +62,7 @@ router.put("/activate/:id", schoolLoggedIn, function (req, res) {
         }
     });
 
-});
+});*/
 //============//
 //poll Page Route- This is the first page a user i.e school sees once it is logged in.
 //===========//
