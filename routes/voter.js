@@ -1,12 +1,11 @@
-var express = require("express");
-var router = express.Router();
+var express   = require("express");
+var router    = express.Router();
 var candidate = require("../models/candidate");
-var voter = require("../models/voters");
-var polls = require("../models/poll");
-var multer = require("multer");
-var paginate = require("express-paginate");
+var voter     = require("../models/voters");
+var polls     = require("../models/poll");
+var multer    = require("multer");
 //Multer Config= Multer stores the file uploaded by the user in the form of document and image files..
-var storage = multer.diskStorage({
+var storage   = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './uploads/')
   },
@@ -14,7 +13,7 @@ var storage = multer.diskStorage({
     cb(null, file.originalname);
   }
 })
-var upload = multer({ storage: storage });
+var upload    = multer({ storage: storage });
 
 //VOTER LANDING== This route will display the elections associated with each voter 
 router.get("/elect", voterLoggedIn, function (req, res) {
@@ -22,7 +21,7 @@ router.get("/elect", voterLoggedIn, function (req, res) {
     if (err) {
       console.log("ERROR");
     } else {
-      res.render("voter/polls", { poll: poll });
+      res.render("voter/polls", { poll: poll ,voterId:req.query.voterId});
     }
   });
 });
@@ -113,7 +112,7 @@ router.put("/matdan/:id", voterLoggedIn, function (req, res) {
 //==middleware==//
 
 function voterLoggedIn(req, res, next) {
-  var voter = req.body.VoterId;
+  var voter = req.query.voterId;
   var voterCode = voter.slice(0, 7);
   votersList.find({ code: voterCode }, function (err, cb) {
     if (err) {

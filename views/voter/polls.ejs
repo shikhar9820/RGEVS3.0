@@ -21,13 +21,13 @@
         <%  var Difference = Math.abs(currDate.getTime()-polling.startDate.getTime());%>
         <%  var Hours      = Math.ceil(Difference / (1000 * 3600 ));%>
       <tr>
-        <%if(polling.flag ==true && Hours< 24 && polling.code==currentUser.code){%>
+        <%if(polling.flag ==true && Hours< 24 && polling.code==voterId.slice(0,7)){%>
         <% counter=counter+1;%>
         <th scope="row"><%=counter%></th>
         <td><%= polling.poll %></td>
         <td>
           <div class="form-group">
-            <a href="/hello/<%=polling._id%>" role="button" aria-pressed="true">Make Vote</a>
+            <a href="/hello/<%=id%>" role="button" aria-pressed="true">Make Vote</a>
           </div>
         </td>
         <%}%>
